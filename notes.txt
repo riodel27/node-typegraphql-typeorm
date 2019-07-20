@@ -1,0 +1,24 @@
+entity
+ -field -> type-graphql
+ -column -> typeorm
+ -key -> type(string,number...)
+
+Questions
+1. field -> type-graphql for object? or json?
+2. column -> typeorm -> simple-json
+3. key -> type -> object? json?
+
+!! start with the name field which is an object field
+ex.
+"name" : {
+        "lang" : {
+            "en" : 0,
+            "zh-hans" : 1,
+            "zh-hant" : 2
+        },
+        "texts" : [ 
+            "Drinks", 
+            "饮料", 
+            "飲料"
+        ]
+},

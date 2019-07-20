@@ -1,0 +1,19 @@
+[{
+	"name": "default",
+	"type": "mongodb",
+	"host": "localhost",
+	"port": 27017,
+	"synchronize": true,
+  "logging": true,
+	"database": "local-viva-dev",
+	"useNewUrlParser":true
+}, {
+	"name": "second-connection",
+	"type": "mongodb",
+	"host": "localhost",
+	"synchronize": true,
+  "logging": true,
+	"port": 27017,
+	"database": "playground",
+	"useNewUrlParser":true
+}]
