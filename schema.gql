@@ -3,20 +3,39 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-type Menu {
-  _id: ObjectId!
-  name: String!
+"""New user data"""
+input AddUserInput {
+  username: String!
+  email: String!
+}
+
+type Mutation {
+  """Add User"""
+  addUser(data: AddUserInput!): User!
+
+  """Update User"""
+  updateUser(data: UpdateUserInput!, id: ObjectId!): User!
+
+  """Delete User"""
+  deleteUser(id: ObjectId!): String!
 }
 
 """Mongo object id scalar type"""
 scalar ObjectId
 
 type Query {
+  """list of users"""
   users: [User!]!
-  menus: [Menu!]!
+}
+
+"""Update user input"""
+input UpdateUserInput {
+  username: String
+  email: String
 }
 
 type User {
-  name: String!
-  age: Float!
+  id: ObjectId!
+  username: String!
+  email: String!
 }

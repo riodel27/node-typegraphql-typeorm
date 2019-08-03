@@ -4,7 +4,7 @@
 		"module": "commonjs",
 		"lib": ["dom", "es2016", "esnext.asynciterable"],
 		"moduleResolution": "node",
-		"outDir": "./dist",
+		"outDir": "bckdist",
 		"strict": true,
 		"strictPropertyInitialization": false,
 		"sourceMap": true,
@@ -12,5 +12,8 @@
 		"experimentalDecorators": true,
 		"esModuleInterop": true
 	},
-	"include": ["./src/**/*"]
+	"include": ["./src/**/*"],
+	"exclude": [
+		"node_modules"
+]
 }

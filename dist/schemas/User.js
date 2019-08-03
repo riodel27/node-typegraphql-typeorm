@@ -10,41 +10,30 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const type_graphql_1 = require("type-graphql");
+const typeorm_1 = require("typeorm");
+const mongodb_1 = require("mongodb");
 let User = class User {
 };
 __decorate([
-    type_graphql_1.Field(),
-    __metadata("design:type", String)
-], User.prototype, "name", void 0);
+    typeorm_1.ObjectIdColumn() //typeorm
+    ,
+    type_graphql_1.Field() // type-graphql
+    ,
+    __metadata("design:type", mongodb_1.ObjectId)
+], User.prototype, "id", void 0);
 __decorate([
     type_graphql_1.Field(),
-    __metadata("design:type", Number)
-], User.prototype, "age", void 0);
+    typeorm_1.Column(),
+    __metadata("design:type", String)
+], User.prototype, "username", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    typeorm_1.Column(),
+    __metadata("design:type", String)
+], User.prototype, "email", void 0);
 User = __decorate([
+    typeorm_1.Entity(),
     type_graphql_1.ObjectType()
 ], User);
-exports.User = User;
-let UserResolver = class UserResolver {
-    constructor() {
-        this.data = [
-            {
-                age: 30,
-                name: "floross"
-            }
-        ];
-    }
-    users() {
-        return this.data;
-    }
-};
-__decorate([
-    type_graphql_1.Query(returns => [User]),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Array)
-], UserResolver.prototype, "users", null);
-UserResolver = __decorate([
-    type_graphql_1.Resolver()
-], UserResolver);
-exports.UserResolver = UserResolver;
-//# sourceMappingURL=user.js.map
+exports.default = User;
+//# sourceMappingURL=User.js.map

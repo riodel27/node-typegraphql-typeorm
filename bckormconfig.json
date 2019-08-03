@@ -15,5 +15,6 @@
   "logging": true,
 	"port": 27017,
 	"database": "playground",
-	"useNewUrlParser":true
+	"useNewUrlParser":true,
+	"entities": ["./src/schemas/*.ts"]
 }]

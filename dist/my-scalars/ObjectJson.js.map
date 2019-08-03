@@ -1,1 +1,0 @@
-{"version":3,"file":"ObjectJson.js","sourceRoot":"","sources":["../../src/my-scalars/ObjectJson.ts"],"names":[],"mappings":";;AAAA,yDAAmE;AACnE,qCAAkD;AAGrC,QAAA,YAAY,GAAG,IAAI,2BAAiB,CAAC;IAChD,IAAI,EAAE,YAAY;IAElB,MAAM,EAAE;QACN,IAAI,EAAE,EAAE,IAAI,EAAE,qCAAiB,EAAE;KAClC;CACF,CAAC,CAAC"}
