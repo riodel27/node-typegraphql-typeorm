@@ -22,3 +22,16 @@ ex.
             "飲料"
         ]
 },
+
+
+08/04/19
+1. validation/error handling
+
+2. improve basic CRUD
+   a. dynamic GET or query/param
+   b. pagination lists
+
+3. (Security) Authorization/Authentication
+
+4. multiple connection of databases(typeorm)
+   a. maybe try using postgressql

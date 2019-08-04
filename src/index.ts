@@ -14,13 +14,13 @@ async function bootstrap() {
 		resolvers: [UserResolver],
 		emitSchemaFile: true,
 		scalarsMap: [{ type: ObjectId, scalar: ObjectIdScalar }],
+		dateScalarMode:"isoDate"
   });
 	const server = new ApolloServer({ schema });
 	
 	// const connections: Connection[] = await createConnections();
 
 	const connection: Connection = await createConnection({
-		name: "default",
     type: "mongodb",
     host: "localhost",
     port: 27017,

@@ -15,15 +15,13 @@ const mongodb_1 = require("mongodb");
 let User = class User {
 };
 __decorate([
-    typeorm_1.ObjectIdColumn() //typeorm
-    ,
-    type_graphql_1.Field() // type-graphql
-    ,
+    typeorm_1.ObjectIdColumn() /** typeorm */,
+    type_graphql_1.Field() /** type-graphql */,
     __metadata("design:type", mongodb_1.ObjectId)
 ], User.prototype, "id", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column(),
+    typeorm_1.Column({ readonly: true }) /** readonly not working */,
     __metadata("design:type", String)
 ], User.prototype, "username", void 0);
 __decorate([
@@ -31,6 +29,11 @@ __decorate([
     typeorm_1.Column(),
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    typeorm_1.CreateDateColumn(),
+    __metadata("design:type", Date)
+], User.prototype, "createdAt", void 0);
 User = __decorate([
     typeorm_1.Entity(),
     type_graphql_1.ObjectType()

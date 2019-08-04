@@ -16,11 +16,11 @@ async function bootstrap() {
         resolvers: [UserResolver_1.default],
         emitSchemaFile: true,
         scalarsMap: [{ type: mongodb_1.ObjectId, scalar: ObjectId_1.ObjectIdScalar }],
+        dateScalarMode: "isoDate"
     });
     const server = new apollo_server_1.ApolloServer({ schema });
     // const connections: Connection[] = await createConnections();
     const connection = await typeorm_1.createConnection({
-        name: "default",
         type: "mongodb",
         host: "localhost",
         port: 27017,

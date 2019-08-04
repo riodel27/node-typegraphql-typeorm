@@ -3,27 +3,36 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-"""New user data"""
+"""New user input"""
 input AddUserInput {
   username: String!
   email: String!
+  createdAt: DateTime
 }
+
+"""
+The javascript `Date` as string. Type represents date and time as the ISO Date string.
+"""
+scalar DateTime
 
 type Mutation {
   """Add User"""
   addUser(data: AddUserInput!): User!
 
   """Update User"""
-  updateUser(data: UpdateUserInput!, id: ObjectId!): User!
+  updateUser(data: UpdateUserInput!, id: ObjectId!): User
 
   """Delete User"""
-  deleteUser(id: ObjectId!): String!
+  deleteUser(id: ObjectId!): String
 }
 
 """Mongo object id scalar type"""
 scalar ObjectId
 
 type Query {
+  """Get a User"""
+  user(id: String!): User
+
   """list of users"""
   users: [User!]!
 }
@@ -38,4 +47,5 @@ type User {
   id: ObjectId!
   username: String!
   email: String!
+  createdAt: DateTime!
 }
