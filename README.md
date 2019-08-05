@@ -5,3 +5,9 @@ $ tsc
 The compiled JavaScript files will be inside the dist directory, as specified in tsconfig.json. Now we can start the GraphQL server:
 
 $ node ./dist/index.js
+
+
+or
+
+
+$ npm start
