@@ -2,36 +2,11 @@ import { UserInputError } from 'apollo-server'
 import { ObjectId } from 'mongodb'
 import * as R from 'ramda'
 import { Query, Resolver, Field, Mutation, InputType, Arg } from 'type-graphql'
-import { MaxLength, IsEmail } from "class-validator";
 
 import User from '../schemas/User'
 import { validateAddUser } from '../util/validators'
 import { UserRepository } from '../repository/UserRepository'
-
-
-@InputType({ description: "New user input" })
-class AddUserInput implements Partial<User>{
-	@Field()
-	@MaxLength(10)
-	readonly username: string /** readonly not working */
-
-	@Field()
-	email: string
-
-	@Field({ nullable: true })
-	createdAt?: Date
-}
-
-@InputType({ description: "Update user input" })
-class UpdateUserInput implements Partial<User>{
-	@Field({ nullable: true })
-	@MaxLength(10)
-	username?: string
-
-	@Field({ nullable: true })
-	@IsEmail() /** seems like custom validation error is much better as it should return a code maybe like BAD_USER_INPUT  but instead this is returning a INTERNAL_SERVER_ERROR*/
-	email?: string
-}
+import { AddUserInput, UpdateUserInput } from '../inputs/UserInput'
 
 
 @Resolver(of => User)
@@ -49,9 +24,10 @@ export default class UserResolver {
 		return allusers
 	}
 
-	@Mutation(returns => User, { description: "Add User" })
-	async addUser(@Arg('data') newUserData: AddUserInput): Promise<User> {
+	@Mutation(returns => User, { description: "create User" })
+	async createUser(@Arg('input') newUserData: AddUserInput): Promise<User> {
 
+		/**validation*/
 		const { errors, valid } = validateAddUser(newUserData)
 
 		if (R.not(valid)) {
@@ -63,8 +39,10 @@ export default class UserResolver {
 	}
 
 	@Mutation(returns => User, { description: "Update User", nullable: true })
-	async updateUser(@Arg('id') id: ObjectId, @Arg('data') updateUserInputData: UpdateUserInput): Promise<User> {
-		const updatedUser = await UserRepository().findOneAndUpdate({ _id: id }, { $set: updateUserInputData }, { returnOriginal: false })
+	async updateUser(@Arg('input') updateUserInputData: UpdateUserInput): Promise<User> {
+		const { id, patch, updatedAt } = updateUserInputData
+		console.log('updatedAt: ', updatedAt)
+		const updatedUser = await UserRepository().findOneAndUpdate({ _id: id }, { $set: { ...patch, updatedAt } }, { returnOriginal: false })
 		return updatedUser.value
 	}
 

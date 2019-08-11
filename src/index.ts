@@ -1,36 +1,35 @@
 import "reflect-metadata";
 import { ApolloServer } from "apollo-server";
-import {ObjectId} from 'mongodb'
+import { ObjectId } from 'mongodb'
 import { buildSchema } from "type-graphql";
-import {createConnection, createConnections, Connection} from "typeorm";
+import { createConnection, createConnections, Connection } from "typeorm";
 
-import {ObjectIdScalar} from './my-scalars/ObjectId'
+import { ObjectIdScalar } from './my-scalars/ObjectId'
 import User from './schemas/User'
 import UserResolver from './resolvers/UserResolver'
 
 
 async function bootstrap() {
-  const schema = await buildSchema({
+	const schema = await buildSchema({
 		resolvers: [UserResolver],
 		emitSchemaFile: true,
-		scalarsMap: [{ type: ObjectId, scalar: ObjectIdScalar }],
-		dateScalarMode:"isoDate"
-  });
+		scalarsMap: [{ type: ObjectId, scalar: ObjectIdScalar }]
+	});
 	const server = new ApolloServer({ schema });
-	
+
 	// const connections: Connection[] = await createConnections();
 
 	const connection: Connection = await createConnection({
-    type: "mongodb",
-    host: "localhost",
-    port: 27017,
+		type: "mongodb",
+		host: "localhost",
+		port: 27017,
 		database: "playground",
-		entities:[User]
-});
+		entities: [User]
+	});
 
-  server.listen().then(({ url }) => {
-    console.log(`🚀  Server ready at ${url}`);
-  });
+	server.listen().then(({ url }) => {
+		console.log(`🚀  Server ready at ${url}`);
+	});
 }
 
 bootstrap();

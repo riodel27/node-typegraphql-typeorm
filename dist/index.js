@@ -15,8 +15,7 @@ async function bootstrap() {
     const schema = await type_graphql_1.buildSchema({
         resolvers: [UserResolver_1.default],
         emitSchemaFile: true,
-        scalarsMap: [{ type: mongodb_1.ObjectId, scalar: ObjectId_1.ObjectIdScalar }],
-        dateScalarMode: "isoDate"
+        scalarsMap: [{ type: mongodb_1.ObjectId, scalar: ObjectId_1.ObjectIdScalar }]
     });
     const server = new apollo_server_1.ApolloServer({ schema });
     // const connections: Connection[] = await createConnections();

@@ -1,7 +1,6 @@
 type User = {
 	username: string
 	email: string
-	createdAt?: Date
 }
 
 type Errors = {

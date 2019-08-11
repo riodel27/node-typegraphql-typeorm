@@ -26,43 +26,10 @@ const apollo_server_1 = require("apollo-server");
 const mongodb_1 = require("mongodb");
 const R = __importStar(require("ramda"));
 const type_graphql_1 = require("type-graphql");
-const class_validator_1 = require("class-validator");
 const User_1 = __importDefault(require("../schemas/User"));
 const validators_1 = require("../util/validators");
 const UserRepository_1 = require("../repository/UserRepository");
-let AddUserInput = class AddUserInput {
-};
-__decorate([
-    type_graphql_1.Field(),
-    class_validator_1.MaxLength(10),
-    __metadata("design:type", String)
-], AddUserInput.prototype, "username", void 0);
-__decorate([
-    type_graphql_1.Field(),
-    __metadata("design:type", String)
-], AddUserInput.prototype, "email", void 0);
-__decorate([
-    type_graphql_1.Field({ nullable: true }),
-    __metadata("design:type", Date)
-], AddUserInput.prototype, "createdAt", void 0);
-AddUserInput = __decorate([
-    type_graphql_1.InputType({ description: "New user input" })
-], AddUserInput);
-let UpdateUserInput = class UpdateUserInput {
-};
-__decorate([
-    type_graphql_1.Field({ nullable: true }),
-    class_validator_1.MaxLength(10),
-    __metadata("design:type", String)
-], UpdateUserInput.prototype, "username", void 0);
-__decorate([
-    type_graphql_1.Field({ nullable: true }),
-    class_validator_1.IsEmail() /** seems like custom validation error is much better as it should return a code maybe like BAD_USER_INPUT  but instead this is returning a INTERNAL_SERVER_ERROR*/,
-    __metadata("design:type", String)
-], UpdateUserInput.prototype, "email", void 0);
-UpdateUserInput = __decorate([
-    type_graphql_1.InputType({ description: "Update user input" })
-], UpdateUserInput);
+const UserInput_1 = require("../inputs/UserInput");
 let UserResolver = class UserResolver {
     async user(id) {
         const user = await UserRepository_1.UserRepository().findOne(id);
@@ -72,7 +39,8 @@ let UserResolver = class UserResolver {
         const allusers = await UserRepository_1.UserRepository().find();
         return allusers;
     }
-    async addUser(newUserData) {
+    async createUser(newUserData) {
+        /**validation*/
         const { errors, valid } = validators_1.validateAddUser(newUserData);
         if (R.not(valid)) {
             throw new apollo_server_1.UserInputError('Errors', { errors });
@@ -80,8 +48,10 @@ let UserResolver = class UserResolver {
         const newUser = await UserRepository_1.UserRepository().insertOne(newUserData);
         return newUser.ops[0];
     }
-    async updateUser(id, updateUserInputData) {
-        const updatedUser = await UserRepository_1.UserRepository().findOneAndUpdate({ _id: id }, { $set: updateUserInputData }, { returnOriginal: false });
+    async updateUser(updateUserInputData) {
+        const { id, patch, updatedAt } = updateUserInputData;
+        console.log('updatedAt: ', updatedAt);
+        const updatedUser = await UserRepository_1.UserRepository().findOneAndUpdate({ _id: id }, { $set: Object.assign({}, patch, { updatedAt }) }, { returnOriginal: false });
         return updatedUser.value;
     }
     async deleteUser(id) {
@@ -104,17 +74,17 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "users", null);
 __decorate([
-    type_graphql_1.Mutation(returns => User_1.default, { description: "Add User" }),
-    __param(0, type_graphql_1.Arg('data')),
+    type_graphql_1.Mutation(returns => User_1.default, { description: "create User" }),
+    __param(0, type_graphql_1.Arg('input')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [AddUserInput]),
+    __metadata("design:paramtypes", [UserInput_1.AddUserInput]),
     __metadata("design:returntype", Promise)
-], UserResolver.prototype, "addUser", null);
+], UserResolver.prototype, "createUser", null);
 __decorate([
     type_graphql_1.Mutation(returns => User_1.default, { description: "Update User", nullable: true }),
-    __param(0, type_graphql_1.Arg('id')), __param(1, type_graphql_1.Arg('data')),
+    __param(0, type_graphql_1.Arg('input')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [mongodb_1.ObjectId, UpdateUserInput]),
+    __metadata("design:paramtypes", [UserInput_1.UpdateUserInput]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "updateUser", null);
 __decorate([

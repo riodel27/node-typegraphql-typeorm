@@ -32,6 +32,9 @@ ex.
    b. pagination lists
 
 3. (Security) Authorization/Authentication
+   a. Authentication
+	 b. Authorization
+	 c. Auth0
 
 4. multiple connection of databases(typeorm)
    a. maybe try using postgressql
