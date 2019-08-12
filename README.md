@@ -6,5 +6,6 @@ technology / Stack
  * Apollo server express
  * redis
 
-λ docker run -d -p 6379:6379 --name redis1 redis 
+λ docker run -d -p 6379:6379 --name redis1 redis
+ 
 $ npm start
