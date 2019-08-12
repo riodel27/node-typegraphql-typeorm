@@ -7,4 +7,4 @@ technology / Stack
  * redis
 
 λ docker run -d -p 6379:6379 --name redis1 redis 
-λ npm start
+$ npm start
