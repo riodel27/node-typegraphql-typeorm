@@ -31,34 +31,19 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
 __decorate([
+    type_graphql_1.Field(),
+    typeorm_1.Column(),
+    __metadata("design:type", String)
+], User.prototype, "password", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", String)
+], User.prototype, "token", void 0);
+__decorate([
     type_graphql_1.Field(type => graphql_type_json_1.GraphQLJSONObject),
     typeorm_1.Column(),
     __metadata("design:type", Object)
 ], User.prototype, "random", void 0);
-__decorate([
-    type_graphql_1.Field(),
-    typeorm_1.Column(),
-    __metadata("design:type", Date)
-], User.prototype, "createdAt", void 0);
-__decorate([
-    type_graphql_1.Field({ defaultValue: new Date() }),
-    typeorm_1.Column({ default: new Date() }),
-    __metadata("design:type", Date)
-], User.prototype, "updatedAt", void 0);
-__decorate([
-    typeorm_1.CreateDateColumn({
-        nullable: false,
-        name: "dt_create"
-    }),
-    __metadata("design:type", Date)
-], User.prototype, "createdOn", void 0);
-__decorate([
-    typeorm_1.UpdateDateColumn({
-        nullable: false,
-        name: "dt_modified"
-    }),
-    __metadata("design:type", Date)
-], User.prototype, "modifiedOn", void 0);
 User = __decorate([
     typeorm_1.Entity(),
     type_graphql_1.ObjectType()

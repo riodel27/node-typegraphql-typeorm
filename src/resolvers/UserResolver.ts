@@ -1,48 +1,53 @@
-import { UserInputError } from 'apollo-server'
+import { UserInputError } from 'apollo-server-express'
 import { ObjectId } from 'mongodb'
 import * as R from 'ramda'
-import { Query, Resolver, Field, Mutation, InputType, Arg } from 'type-graphql'
+import { Query, Resolver, Mutation, Arg, Ctx } from 'type-graphql'
+import { hash } from 'bcryptjs';
 
 import User from '../schemas/User'
-import { validateAddUser } from '../util/validators'
+import { validateCreateUser } from '../util/validators'
 import { UserRepository } from '../repository/UserRepository'
 import { AddUserInput, UpdateUserInput } from '../inputs/UserInput'
+import { MyContext } from '../types/MyContext'
+import { generateToken } from '../util/generateToken'
 
 
 @Resolver(of => User)
 export default class UserResolver {
 
 	@Query(returns => User, { description: 'Get a User', nullable: true })
-	async user(@Arg('id') id: string): Promise<User | undefined> {
-		const user = await UserRepository().findOne(id)
+	async user(@Arg('id', { nullable: true, }) id: string, @Ctx() ctx: MyContext): Promise<User | undefined> {
+		if (!ctx.req.session!.userId) throw new Error('You must be logged in')
+		const userId = id ? id : ctx.req.session!.userId
+		const user = await UserRepository().findOne(userId)
 		return user
 	}
 
 	@Query(returns => [User], { description: 'list of users' })
-	async users(): Promise<User[]> {
+	async users(@Ctx() ctx: MyContext): Promise<User[]> {
+		if (!ctx.req.session!.userId) throw new Error('You must be logged in')
 		const allusers = await UserRepository().find()
 		return allusers
 	}
 
 	@Mutation(returns => User, { description: "create User" })
 	async createUser(@Arg('input') newUserData: AddUserInput): Promise<User> {
-
+		const { confirmPassword, ...userData } = newUserData
 		/**validation*/
-		const { errors, valid } = validateAddUser(newUserData)
-
+		const { errors, valid } = validateCreateUser(newUserData)
 		if (R.not(valid)) {
 			throw new UserInputError('Errors', { errors })
 		}
-
-		const newUser = await UserRepository().insertOne(newUserData)
-		return newUser.ops[0]
+		const hashPassword = await hash(userData.password, 12)
+		const newUser = await UserRepository().insertOne({ ...userData, password: hashPassword })
+		const token = generateToken(newUser.ops[0])
+		return { ...newUser.ops[0], token }
 	}
 
 	@Mutation(returns => User, { description: "Update User", nullable: true })
 	async updateUser(@Arg('input') updateUserInputData: UpdateUserInput): Promise<User> {
-		const { id, patch, updatedAt } = updateUserInputData
-		console.log('updatedAt: ', updatedAt)
-		const updatedUser = await UserRepository().findOneAndUpdate({ _id: id }, { $set: { ...patch, updatedAt } }, { returnOriginal: false })
+		const { id, patch } = updateUserInputData
+		const updatedUser = await UserRepository().findOneAndUpdate({ _id: id }, { $set: { ...patch, updatedAt: new Date() } }, { returnOriginal: false })
 		return updatedUser.value
 	}
 
@@ -52,4 +57,5 @@ export default class UserResolver {
 		console.log('deleted user: ', deletedUser.deletedCount)
 		return `user with id:${id} has been successfully deleted!`
 	}
+
 }

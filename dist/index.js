@@ -17,7 +17,21 @@ async function bootstrap() {
         emitSchemaFile: true,
         scalarsMap: [{ type: mongodb_1.ObjectId, scalar: ObjectId_1.ObjectIdScalar }]
     });
-    const server = new apollo_server_1.ApolloServer({ schema });
+    const server = new apollo_server_1.ApolloServer({
+        schema, context: ({ req }) => {
+            const token = req.headers.authorization || "";
+            // const user = getUser(token)
+            const user = {
+                _id: "5d5136eeff53d816646274c0",
+                username: "rio",
+                email: "rio@lamok.com",
+                password: "$2a$12$1peQlqGoi6gPnHO/i3X0B.JDBhXmUOIhu2.cn/ZRLr3HcAw5aUyx."
+            };
+            return {
+                user
+            };
+        }
+    });
     // const connections: Connection[] = await createConnections();
     const connection = await typeorm_1.createConnection({
         type: "mongodb",

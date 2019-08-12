@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateAddUser = ({ username, email }) => {
+exports.validateCreateUser = ({ username, email }) => {
     const errors = {};
     if (email.trim() === '') {
         errors.email = "Email must not be empty";

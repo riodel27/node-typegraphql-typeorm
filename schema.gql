@@ -7,9 +7,11 @@
 input AddUserInput {
   username: String!
   email: String!
+  password: String!
+  confirmPassword: String!
   random: JSONObject
-  createdOn: DateTime
-  modifiedOn: DateTime
+  createdAt: DateTime
+  updatedAt: DateTime
 }
 
 """
@@ -22,6 +24,12 @@ The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](
 """
 scalar JSONObject
 
+"""Login user input"""
+input LoginUserInput {
+  username: String!
+  password: String!
+}
+
 type Mutation {
   """create User"""
   createUser(input: AddUserInput!): User!
@@ -31,6 +39,10 @@ type Mutation {
 
   """Delete User"""
   deleteUser(id: ObjectId!): String
+  login(password: String!, email: String!): User
+
+  """login user"""
+  loginUser(input: LoginUserInput!): User!
 }
 
 """Mongo object id scalar type"""
@@ -38,7 +50,7 @@ scalar ObjectId
 
 type Query {
   """Get a User"""
-  user(id: String!): User
+  user(id: String): User
 
   """list of users"""
   users: [User!]!
@@ -55,7 +67,7 @@ type User {
   _id: ObjectId!
   username: String!
   email: String!
+  password: String!
+  token: String!
   random: JSONObject!
-  createdAt: DateTime!
-  updatedAt: DateTime
 }

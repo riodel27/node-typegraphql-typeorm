@@ -13,7 +13,7 @@ type ErrorObject = {
 }
 
 
-export const validateAddUser = ({ username, email }: User): ErrorObject => {
+export const validateCreateUser = ({ username, email }: User): ErrorObject => {
 	const errors = <Errors>{}
 	if (email.trim() === '') {
 		errors.email = "Email must not be empty"

@@ -11,6 +11,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -26,10 +37,20 @@ const apollo_server_1 = require("apollo-server");
 const mongodb_1 = require("mongodb");
 const R = __importStar(require("ramda"));
 const type_graphql_1 = require("type-graphql");
+const bcryptjs_1 = require("bcryptjs");
+const jsonwebtoken_1 = require("jsonwebtoken");
 const User_1 = __importDefault(require("../schemas/User"));
 const validators_1 = require("../util/validators");
 const UserRepository_1 = require("../repository/UserRepository");
 const UserInput_1 = require("../inputs/UserInput");
+const secret_key = 'rio';
+const generateToken = ({ _id, email, username }) => {
+    return jsonwebtoken_1.sign({
+        id: _id,
+        email,
+        username
+    }, secret_key, { expiresIn: '1h' });
+};
 let UserResolver = class UserResolver {
     async user(id) {
         const user = await UserRepository_1.UserRepository().findOne(id);
@@ -40,13 +61,18 @@ let UserResolver = class UserResolver {
         return allusers;
     }
     async createUser(newUserData) {
+        const { confirmPassword } = newUserData, userData = __rest(newUserData
         /**validation*/
-        const { errors, valid } = validators_1.validateAddUser(newUserData);
+        , ["confirmPassword"]);
+        /**validation*/
+        const { errors, valid } = validators_1.validateCreateUser(newUserData);
         if (R.not(valid)) {
             throw new apollo_server_1.UserInputError('Errors', { errors });
         }
-        const newUser = await UserRepository_1.UserRepository().insertOne(newUserData);
-        return newUser.ops[0];
+        const hashPassword = await bcryptjs_1.hash(userData.password, 12);
+        const newUser = await UserRepository_1.UserRepository().insertOne(Object.assign({}, userData, { password: hashPassword }));
+        const token = generateToken(newUser.ops[0]);
+        return Object.assign({}, newUser.ops[0], { token });
     }
     async updateUser(updateUserInputData) {
         const { id, patch, updatedAt } = updateUserInputData;
@@ -58,6 +84,17 @@ let UserResolver = class UserResolver {
         const deletedUser = await UserRepository_1.UserRepository().deleteOne({ _id: id });
         console.log('deleted user: ', deletedUser.deletedCount);
         return `user with id:${id} has been successfully deleted!`;
+    }
+    async loginUser(loginInput) {
+        const { username, password } = loginInput;
+        const user = await UserRepository_1.UserRepository().findOne({ username });
+        if (!user)
+            throw new apollo_server_1.UserInputError('User not found');
+        const match = await bcryptjs_1.compare(password, user.password);
+        if (!match)
+            throw new apollo_server_1.UserInputError('Wrong credientials');
+        const token = generateToken(user);
+        return Object.assign({}, user, { token });
     }
 };
 __decorate([
@@ -94,6 +131,13 @@ __decorate([
     __metadata("design:paramtypes", [mongodb_1.ObjectId]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "deleteUser", null);
+__decorate([
+    type_graphql_1.Mutation(returns => User_1.default, { description: "login user" }),
+    __param(0, type_graphql_1.Arg('input')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [UserInput_1.LoginUserInput]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "loginUser", null);
 UserResolver = __decorate([
     type_graphql_1.Resolver(of => User_1.default)
 ], UserResolver);

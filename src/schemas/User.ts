@@ -18,28 +18,14 @@ export default class User {
 	@Column()
 	email: string
 
+	@Field()
+	@Column()
+	password: string
+
+	@Field()
+	token: string
+
 	@Field(type => GraphQLJSONObject)
 	@Column()
 	random: object
-
-	@Field()
-	@Column()
-	createdAt: Date
-
-	@Field({ defaultValue: new Date() })
-	@Column({ default: new Date() })
-	updatedAt: Date
-
-	@CreateDateColumn({
-		nullable: false,
-		name: "dt_create"
-	})
-	createdOn: Date;
-
-	@UpdateDateColumn({
-		nullable: false,
-		name: "dt_modified"
-	})
-	modifiedOn: Date;
-
 }

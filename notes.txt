@@ -1,40 +1,10 @@
-entity
- -field -> type-graphql
- -column -> typeorm
- -key -> type(string,number...)
-
-Questions
-1. field -> type-graphql for object? or json?
-2. column -> typeorm -> simple-json
-3. key -> type -> object? json?
-
-!! start with the name field which is an object field
-ex.
-"name" : {
-        "lang" : {
-            "en" : 0,
-            "zh-hans" : 1,
-            "zh-hant" : 2
-        },
-        "texts" : [ 
-            "Drinks", 
-            "饮料", 
-            "飲料"
-        ]
-},
-
-
-08/04/19
-1. validation/error handling
-
-2. improve basic CRUD
+08/12/19
+1. improve basic CRUD
    a. dynamic GET or query/param
    b. pagination lists
 
-3. (Security) Authorization/Authentication
-   a. Authentication
-	 b. Authorization
-	 c. Auth0
-
-4. multiple connection of databases(typeorm)
+2. multiple connection of databases(typeorm)
    a. maybe try using postgressql
+
+
+

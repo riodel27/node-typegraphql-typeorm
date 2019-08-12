@@ -25,19 +25,25 @@ __decorate([
     __metadata("design:type", String)
 ], AddUserInput.prototype, "email", void 0);
 __decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", String)
+], AddUserInput.prototype, "password", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", String)
+], AddUserInput.prototype, "confirmPassword", void 0);
+__decorate([
     type_graphql_1.Field(type => graphql_type_json_1.GraphQLJSONObject, { nullable: true }),
     __metadata("design:type", Object)
 ], AddUserInput.prototype, "random", void 0);
 __decorate([
     type_graphql_1.Field({ nullable: true }),
-    __metadata("design:type", Date
-    /**default value of new date() is a problem. because it doesn't seem to change. seem like it is creating the date when the program is started. */
-    )
-], AddUserInput.prototype, "createdOn", void 0);
+    __metadata("design:type", Date)
+], AddUserInput.prototype, "createdAt", void 0);
 __decorate([
     type_graphql_1.Field({ nullable: true }),
     __metadata("design:type", Date)
-], AddUserInput.prototype, "modifiedOn", void 0);
+], AddUserInput.prototype, "updatedAt", void 0);
 AddUserInput = __decorate([
     type_graphql_1.InputType({ description: "New user input" })
 ], AddUserInput);
@@ -60,4 +66,18 @@ UpdateUserInput = __decorate([
     type_graphql_1.InputType({ description: "Update user input" })
 ], UpdateUserInput);
 exports.UpdateUserInput = UpdateUserInput;
+let LoginUserInput = class LoginUserInput {
+};
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", String)
+], LoginUserInput.prototype, "username", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", String)
+], LoginUserInput.prototype, "password", void 0);
+LoginUserInput = __decorate([
+    type_graphql_1.InputType({ description: 'Login user input' })
+], LoginUserInput);
+exports.LoginUserInput = LoginUserInput;
 //# sourceMappingURL=UserInput.js.map
