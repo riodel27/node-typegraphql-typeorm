@@ -1,10 +1,16 @@
-08/12/19
+08/13/19
 1. improve basic CRUD
    a. dynamic GET or query/param
-   b. pagination lists
+	    - try to find out if this can achieve dynamic query or parameters. 
+			  * pass nested query?
+				* search query?
+				* limit query?
+   b. pagination lists 
+	    -> https://graphql.org/learn/pagination/
+			-> https://www.apollographql.com/docs/tutorial/resolvers/
+	      * best way to do a pagination lists. 
 
 2. multiple connection of databases(typeorm)
    a. maybe try using postgressql
 
-
-
+3. search engine feature

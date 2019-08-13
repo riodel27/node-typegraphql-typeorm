@@ -25,7 +25,7 @@ export default class User {
 	@Field()
 	token: string
 
-	@Field(type => GraphQLJSONObject)
+	@Field(type => GraphQLJSONObject, { nullable: true })
 	@Column()
-	random: object
+	user: object
 }

@@ -53,7 +53,12 @@ type Query {
   user(id: String): User
 
   """list of users"""
-  users: [User!]!
+  users(input: QueryParams): [User!]!
+}
+
+"""dynamic query"""
+input QueryParams {
+  query: JSONObject
 }
 
 """Update user input"""
@@ -69,5 +74,5 @@ type User {
   email: String!
   password: String!
   token: String!
-  random: JSONObject!
+  user: JSONObject
 }

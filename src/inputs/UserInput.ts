@@ -52,3 +52,9 @@ export class LoginUserInput implements Partial<User>{
 	@Field()
 	password: string
 }
+
+@InputType({ description: "dynamic query", })
+export class QueryParams {
+	@Field(type => GraphQLJSONObject, { nullable: true })
+	query: object
+}

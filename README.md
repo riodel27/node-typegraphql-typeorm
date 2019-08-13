@@ -1,3 +1,6 @@
+
+Simple CRUD operation using the technology stack listed below.
+
 technology / Stack
  * GraphQL
  * Typescript
