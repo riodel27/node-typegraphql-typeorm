@@ -4,30 +4,41 @@ import connectRedis from "connect-redis";
 import session from 'express-session'
 import Express from 'express'
 import { buildSchema } from "type-graphql";
-import { createConnection, createConnections, Connection } from "typeorm";
+import { createConnections } from "typeorm";
 import { ObjectId } from 'mongodb'
 import { ApolloServer } from "apollo-server-express";
 
 
 import User from './schemas/User'
+import Company from './schemas/Company'
 import UserResolver from './resolvers/UserResolver'
+import CompanyResolver from './resolvers/CompanyResolver'
 import { ObjectIdScalar } from './my-scalars/ObjectId'
 import { LoginResolver } from './resolvers/LoginResolver'
 import { redis } from "./redis";
 
 
 async function bootstrap() {
-	/**const connections: Connection[] = await createConnections(); */
-	const connection: Connection = await createConnection({
+
+	await createConnections([{
 		type: "mongodb",
 		host: "localhost",
 		port: 27017,
 		database: "playground",
 		entities: [User]
-	});
+	}, {
+		name: "postgresql",
+		type: "postgres",
+		host: "localhost",
+		port: 5432,
+		username: "postgres",
+		password: "root",
+		database: "guru99",
+		entities: [Company]
+	}]);
 
 	const schema = await buildSchema({
-		resolvers: [UserResolver, LoginResolver],
+		resolvers: [UserResolver, LoginResolver, CompanyResolver],
 		emitSchemaFile: true,
 		scalarsMap: [{ type: ObjectId, scalar: ObjectIdScalar }]
 	});
