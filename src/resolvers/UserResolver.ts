@@ -5,12 +5,14 @@ import { Query, Resolver, Mutation, Arg, Ctx } from 'type-graphql'
 import { hash } from 'bcryptjs';
 
 import User from '../schemas/User'
+import PaginatedUser from '../schemas/PaginatedUser'
 import { validateCreateUser } from '../util/validators'
 import { UserRepository } from '../repository/UserRepository'
 import { AddUserInput, UpdateUserInput, QueryParams } from '../inputs/UserInput'
 import { MyContext } from '../types/MyContext'
 import { generateToken } from '../util/generateToken'
 
+const util = require('../util/index')
 
 @Resolver(of => User)
 export default class UserResolver {
@@ -27,13 +29,24 @@ export default class UserResolver {
 	async users(@Arg("input", { nullable: true }) input: QueryParams, @Ctx() ctx: MyContext): Promise<User[]> {
 		if (!ctx.req.session!.userId) throw new Error('You must be logged in')
 
-		if (input && input.query){
-			const data = {...input.query}
+		if (input && input.query) {
+			const data = { ...input.query }
 			/**not reliable this way. because trying to find using object instead of using dot notation will not work. because it needs to be an exact match of object. no more no less */
-			return await UserRepository().find({ where: {...input.query} })
+			return await UserRepository().find({ where: { ...input.query } })
 		}
 		else
 			return await UserRepository().find()
+	}
+
+	@Query(returns => PaginatedUser)
+	async paginatedUsers(@Arg('pageSize') pageSize: number, @Arg('after', { nullable: true }) after: string): Promise<PaginatedUser> {
+		const allUsers = await UserRepository().find()
+		const users = util.paginateResults({ after, pageSize, results: allUsers })
+		return {
+			users,
+			cursor: users.length ? users[users.length - 1].cursor : null,
+			hasMore: users.length ? users[users.length - 1].cursor !== allUsers[allUsers.length - 1] : false
+		}
 	}
 
 	@Mutation(returns => User, { description: "create User" })

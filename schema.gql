@@ -55,12 +55,19 @@ type Mutation {
 """Mongo object id scalar type"""
 scalar ObjectId
 
+type PaginatedUser {
+  cursor: String!
+  hasMore: Boolean!
+  users: [User!]!
+}
+
 type Query {
   """Get a User"""
   user(id: String): User
 
   """list of users"""
   users(input: QueryParams): [User!]!
+  paginatedUsers(after: String, pageSize: Float!): PaginatedUser!
 
   """list of companies"""
   companies: [Company!]!
