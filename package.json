@@ -27,7 +27,7 @@
     "ramda": "^0.26.1",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^0.17.4",
-    "typeorm": "^0.2.18"
+    "typeorm": "^0.2.25"
   },
   "devDependencies": {
     "@types/connect-redis": "0.0.10",
